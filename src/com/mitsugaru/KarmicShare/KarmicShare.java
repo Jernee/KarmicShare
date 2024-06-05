@@ -2,14 +2,16 @@
  * KarmicShare CraftBukkit plugin that allows for players to share items via a
  * community pool. Karma system in place so that players cannot leech from the
  * item pool.
- * 
+ *
  * @author Mitsugaru
  */
 package com.mitsugaru.KarmicShare;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -75,8 +77,8 @@ public class KarmicShare extends JavaPlugin{
       economyFound = setupEconomy();
       if(!economyFound && RootConfig.getBoolean(ConfigNode.KARMA_ECONOMY)){
          getLogger()
-               .warning(
-                     "Economy not found, but is enabled in config.yml. Reverting to built-in karma system.");
+                 .warning(
+                         "Economy not found, but is enabled in config.yml. Reverting to built-in karma system.");
          RootConfig.set("karma.useEconomy", false);
          RootConfig.reload();
       }
@@ -108,7 +110,7 @@ public class KarmicShare extends JavaPlugin{
 
    /**
     * Returns SQLite database
-    * 
+    *
     * @return SQLite database
     */
    public DatabaseHandler getDatabaseHandler(){
@@ -118,8 +120,8 @@ public class KarmicShare extends JavaPlugin{
    private boolean setupEconomy(){
       boolean found = false;
       RegisteredServiceProvider<Economy> economyProvider = this.getServer()
-            .getServicesManager()
-            .getRegistration(net.milkbowl.vault.economy.Economy.class);
+              .getServicesManager()
+              .getRegistration(net.milkbowl.vault.economy.Economy.class);
       if(economyProvider != null){
          eco = economyProvider.getProvider();
          found = true;
@@ -140,10 +142,10 @@ public class KarmicShare extends JavaPlugin{
 
    /**
     * Colorizes a given string to Bukkit standards
-    * 
+    *
     * http://forums.bukkit.org/threads/multiple-classes-config-colours.79719/#
     * post-1154761
-    * 
+    *
     * @param string
     * @return String with appropriate Bukkit ChatColor in them
     * @author Njol
@@ -158,14 +160,14 @@ public class KarmicShare extends JavaPlugin{
    /**
     * Attempts to look up full name based on who's on the server Given a partial
     * name
-    * 
+    *
     * @author Frigid, edited by Raphfrk and petteyg359
     */
    public String expandName(String Name){
       int m = 0;
       String Result = "";
-      for(int n = 0; n < getServer().getOnlinePlayers().length; n++){
-         String str = getServer().getOnlinePlayers()[n].getName();
+      for(Player p : Bukkit.getOnlinePlayers()){
+         String str = p.getName();
          if(str.matches("(?i).*" + Name + ".*")){
             m++;
             Result = str;
